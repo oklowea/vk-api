@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import { parsePath } from 'vue-router/src/util/path';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    // 7997028
-    token: '146327519ddd54cc0a235b303dfb7be029f1a14df5f845976722b2af80b9fc4745244ae238836f01a2525',
+    token: process.env.VUE_APP_VK_TOKEN,
     user: null,
     groups: [],
     group: null,
