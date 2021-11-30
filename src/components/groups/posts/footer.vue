@@ -3,8 +3,14 @@
     <div class="footer-count">
       <div class="footer-count__left">
         <div class="footer-count__item">
-          <div class="footer-count__icon"><LikesIcon /></div>
-          <div class="footer-count__value">{{ (post.likes.count).toLocaleString() }}</div>
+          <AppLike
+            @toggle-like="toggleLike"
+            :has-like="hasLike"
+            :count="post.likes.count"
+            type="post"
+            :owner-id="post.owner_id"
+            :item-id="post.id"
+          />
         </div>
         <div @click="openComments" class="footer-count__item">
           <div class="footer-count__icon"><CommentsIcon /></div>
@@ -43,13 +49,28 @@
 
 <script>
 import numberRounding from '@/helpers/number-rounding';
-import LikesIcon from '@/components/icons/likes.vue';
+import AppLike from '@/components/common/like.vue';
 import CommentsIcon from '@/components/icons/comments.vue';
 import SharedIcon from '@/components/icons/shared.vue';
 import ViewsIcon from '@/components/icons/views.vue';
 import CommentItem from '@/components/groups/posts/comment.vue';
 
 export default {
+  components: {
+    AppLike,
+    CommentsIcon,
+    SharedIcon,
+    ViewsIcon,
+    CommentItem,
+  },
+
+  props: {
+    post: {
+      type: Object,
+      required: true,
+    },
+  },
+
   data() {
     return {
       showComments: false,
@@ -61,22 +82,13 @@ export default {
     };
   },
 
-  components: {
-    LikesIcon,
-    CommentsIcon,
-    SharedIcon,
-    ViewsIcon,
-    CommentItem,
-  },
-  props: {
-    post: {
-      type: Object,
-      required: true,
-    },
-  },
   computed: {
     views() {
       return numberRounding(this.post.views.count);
+    },
+
+    hasLike() {
+      return Boolean(this.post.likes.user_likes);
     },
   },
 
@@ -96,6 +108,7 @@ export default {
       this.currentLevelCount = response.current_level_count;
       this.isLoaded = true;
     },
+
     async getCommentsMore() {
       if (this.offset < this.currentLevelCount) {
         this.offset += 10;
@@ -108,6 +121,11 @@ export default {
         this.postComments = this.postComments.concat(response.items);
         this.postProfiles = this.postProfiles.concat(response.profiles);
       }
+    },
+
+    toggleLike(payload) {
+      this.post.likes.count = payload.count;
+      this.post.likes.user_likes = payload.hasLike;
     },
   },
 };
