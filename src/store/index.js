@@ -76,6 +76,22 @@ export default new Vuex.Store({
       const commentsPostResponse = await fetch(`https://api.vk.com/method/wall.getComments?v=5.124&access_token=${state.token}&owner_id=${payload.groupId}&comment_id=${payload.commentId}&post_id=${payload.postId}&extended=1&&need_likes=1`);
       return (await commentsPostResponse.json()).response;
     },
+
+    async like({ state }, payload) {
+      const response = await fetch(`https://api.vk.com/method/likes.add?v=5.124&access_token=${state.token}`
+      + `&type=${payload.type}`
+      + `&owner_id=${payload.ownerId}`
+      + `&item_id=${payload.itemId}`);
+      return (await response.json()).response;
+    },
+
+    async dislike({ state }, payload) {
+      const response = await fetch(`https://api.vk.com/method/likes.delete?v=5.124&access_token=${state.token}`
+        + `&type=${payload.type}`
+        + `&owner_id=${payload.ownerId}`
+        + `&item_id=${payload.itemId}`);
+      return (await response.json()).response;
+    },
   },
 
   mutations: {
