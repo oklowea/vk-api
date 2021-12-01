@@ -1,5 +1,5 @@
 <template>
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg v-if="!isSmall" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g opacity="0.7">
       <path d="M17 2.90002C18.7001 2.90796 20.3279 3.5889 21.5273 4.7939C22.7267 5.9989 23.4
        7.62987 23.4 9.33002C23.4 12.9 21.97 14.69 15.95 19.33L13.17 21.49C12.8367 21.7487 12.4269
@@ -18,4 +18,21 @@
                     7.00001 4.70002Z" />
     </g>
   </svg>
+  <svg v-else width="11" height="13" viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.9 3C9.612 3 11 4.36 11 6.039C11 7.727 10.31 8.573 7.403 10.789L6.063
+     11.81C5.90106 11.933 5.70333 11.9995 5.5 11.9995C5.29667 11.9995 5.09894 11.933
+      4.937 11.81L3.597 10.788C0.69 8.573 0 7.727 0 6.039C0 4.36 1.388 3 3.1 3C4.004
+       3 5.5 3.9 5.5 5.25C5.5 3.9 6.996 3 7.9 3Z" fill="#828A99"/>
+  </svg>
 </template>
+
+<script>
+export default {
+  props: {
+    isSmall: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
+</script>
