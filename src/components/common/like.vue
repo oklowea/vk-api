@@ -2,9 +2,11 @@
   <div
     @click="toggleLike"
     class="app-like"
-    :class="{ 'app-like--liked': hasLike }">
+    :class="{ 'app-like--liked': hasLike, 'app-like--small': isSmall }">
     <div class="app-like__icon">
-      <LikesIcon :has-like="hasLike"/>
+      <LikesIcon
+        :has-like="hasLike"
+        :is-small="isSmall"/>
     </div>
     <div class="app-like__value">{{ count.toLocaleString() }}</div>
   </div>
@@ -21,6 +23,11 @@ export default {
   },
 
   props: {
+    isSmall: {
+      type: Boolean,
+      required: true,
+    },
+
     count: {
       type: Number,
       required: true,
@@ -88,6 +95,14 @@ export default {
     fill: var(--steel-gray-400);
   }
 
+  &:hover {
+    cursor: pointer;
+
+    svg path {
+      fill: var(--steel-gray-540);
+    }
+  }
+
   &.app-like--liked {
     svg path {
       fill: var(--red);
@@ -95,6 +110,19 @@ export default {
 
     .app-like__value {
       color: var(--red);
+    }
+
+    &:hover {
+      svg path {
+        fill: var(--red);
+      }
+    }
+  }
+
+  &--small {
+    .app-like__value {
+      font-size: 12px;
+      margin-left: 4px;
     }
   }
 }

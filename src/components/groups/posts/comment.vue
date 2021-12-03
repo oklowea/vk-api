@@ -16,13 +16,16 @@
             <a href="">Oтветить</a>
           </div>
         </div>
-        <div v-if="postComment.likes.count" class="footer-comment__item">
-            <div class="footer-comment__likes">
-              <div class="footer-comment-likes__icon">
-                <smallLikesIcon />
-              </div>
-              <div class="footer-comment-likes__value">{{ postComment.likes.count }}</div>
-            </div>
+        <div class="footer-comment__item">
+          <AppLike
+            @toggle-like="toggleLike"
+            :has-like="hasLike"
+            :is-small="true"
+            :count="postComment.likes.count"
+            type="comment"
+            :owner-id="postComment.owner_id"
+            :item-id="postComment.id"
+          />
         </div>
       </div>
 
@@ -48,20 +51,13 @@
 import { mapGetters } from 'vuex';
 import pluralize from '@/helpers/pluralize';
 import dateConversion from '@/helpers/date-conversion';
-import smallLikesIcon from '@/components/icons/small-likes.vue';
+import AppLike from '@/components/common/like.vue';
 
 export default {
   name: 'CommentItem',
 
-  data() {
-    return {
-      postCommentsThread: [],
-      postProfilesThread: [],
-    };
-  },
-
   components: {
-    smallLikesIcon,
+    AppLike,
   },
 
   props: {
@@ -77,6 +73,13 @@ export default {
       type: Object,
       required: true,
     },
+  },
+
+  data() {
+    return {
+      postCommentsThread: [],
+      postProfilesThread: [],
+    };
   },
 
   computed: {
@@ -121,6 +124,10 @@ export default {
     answersLabel() {
       return pluralize(this.postComment.thread.count, ['ответ', 'ответа', 'ответов']);
     },
+
+    hasLike() {
+      return Boolean(this.postComment.likes.user_likes);
+    },
   },
 
   methods: {
@@ -132,6 +139,11 @@ export default {
       });
       this.postCommentsThread = response.items;
       this.postProfilesThread = response.profiles;
+    },
+
+    toggleLike(payload) {
+      this.postComment.likes.count = payload.count;
+      this.postComment.likes.user_likes = payload.hasLike;
     },
   },
 };
@@ -204,11 +216,6 @@ export default {
        color: var(--link);
      }
   }
-}
-
-.footer-comment-likes__value {
-  margin-left: 4px;
-  color: var(--link);
 }
 
 </style>

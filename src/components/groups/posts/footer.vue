@@ -146,10 +146,6 @@ export default {
     display: flex;
     align-items: center;
     margin-right: 21px;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 
   &__icon {
