@@ -3,31 +3,71 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+export const birthdayVisibility = {
+  NONE: 0,
+  FULL: 1,
+  PARTIAL: 2,
+};
+
+export const sexType = {
+  NONE: 0,
+  WOMAN: 1,
+  MAN: 2,
+};
+
 export default new Vuex.Store({
   state: {
     token: process.env.VUE_APP_VK_TOKEN,
-    user: null,
+    account: null,
     groups: [],
     group: null,
+    users: [],
   },
 
   getters: {
-    user: (state) => state.user,
-    userName: (state) => `${state.user.first_name} ${state.user.last_name}`,
+    account: (state) => {
+      if (!state.account) {
+        return null;
+      }
+
+      return {
+        ...state.account,
+        user: state.users.find((o) => o.id === state.account.id),
+      };
+    },
+    userName: (state) => `${state.account.first_name} ${state.account.last_name}`,
     groups: (state) => state.groups,
     group: (state) => state.group,
+    users: (state) => state.users,
+    partner: (state) => {
+      if (!state.account.relation_partner) {
+        return null;
+      }
+
+      const partner = state.users.find((o) => o.id === state.account.relation_partner.id);
+      return state.account.sex === sexType.MAN
+        ? `${partner.first_name_abl} ${partner.last_name_abl}`
+        : `${partner.first_name_ins} ${partner.last_name_ins}`;
+    },
   },
 
   actions: {
     async init({ state, commit }) {
       const accountResponse = await fetch(`https://api.vk.com/method/account.getProfileInfo?v=5.81&access_token=${state.token}`);
-      const accountUserResponse = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${state.token}&fields=photo_200,photo_50`);
+      const account = (await accountResponse.json()).response;
+      commit('setAccount', account);
 
-      // функция коммит вызывает мутацию
-      commit('setUser', {
-        ...(await accountResponse.json()).response,
-        ...(await accountUserResponse.json()).response[0],
-      });
+      {
+        const usersResponse = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${state.token}&fields=photo_200,photo_50,education,counters`);
+        const user = (await usersResponse.json()).response[0];
+        commit('setUser', user);
+      }
+
+      if (account.relation_partner) {
+        const usersResponse = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${state.token}&user_ids=${account.relation_partner.id}&fields=first_name_ins,last_name_ins,first_name_abl,last_name_abl`);
+        const user = (await usersResponse.json()).response[0];
+        commit('setUser', user);
+      }
     },
 
     async getGroups({ state, commit }) {
@@ -95,8 +135,22 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setAccount(state, payload) {
+      state.account = payload;
+    },
+
     setUser(state, payload) {
-      state.user = payload;
+      if (!state.users.find((o) => o.id === payload.id)) {
+        state.users.push(payload);
+      }
+    },
+
+    setUsers(state, payload) {
+      for (let i = 0; i < payload.length; i += 1) {
+        if (!state.users.find((o) => o.id === payload[i].id)) {
+          state.users.push(payload[i]);
+        }
+      }
     },
 
     setGroups(state, payload) {

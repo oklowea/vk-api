@@ -1,37 +1,42 @@
 <template>
-  <div v-if="group" class="group">
-    <div class="bg">
-      <div class="group-header">
-        <div class="group-header__title">{{ group.info.name }}</div>
-        <div class="group-header__status">{{ group.info.status }}</div>
-      </div>
+  <app-content>
+    <template v-slot:column-left>
+      <div v-if="group" class="group">
+        <div class="bg">
+          <div class="group-header">
+            <div class="group-header__title">{{ group.info.name }}</div>
+            <div class="group-header__status">{{ group.info.status }}</div>
+          </div>
 
-      <div v-if="hasInformation" class="group-text">Информация</div>
+          <div v-if="hasInformation" class="group-text">Информация</div>
 
-      <div v-if="hasInformation" class="group-info">
-        <div v-if="group.info.description" class="group-info__item">
-          <div class="group-info__icon"><DescriptionIcon /></div>
-          <div class="group-info__value" v-html="description"></div>
-        </div>
-        <div v-if="group.info.site" class="group-info__item">
-          <div class="group-info__icon"><WebsiteIcon /></div>
-          <div class="group-info__value">
-            <a :href="group.info.site">{{ group.info.site }}</a>
+          <div v-if="hasInformation" class="group-info">
+            <div v-if="group.info.description" class="group-info__item">
+              <div class="group-info__icon"><DescriptionIcon /></div>
+              <div class="group-info__value" v-html="description"></div>
+            </div>
+            <div v-if="group.info.site" class="group-info__item">
+              <div class="group-info__icon"><WebsiteIcon /></div>
+              <div class="group-info__value">
+                <a :href="group.info.site">{{ group.info.site }}</a>
+              </div>
+            </div>
+            <div v-if="group.address" class="group-info__item">
+              <div class="group-info__icon"><AddressIcon /></div>
+              <div class="group-info__value">
+                {{ group.address.address }}, {{ group.address.city.title }}
+              </div>
+            </div>
           </div>
         </div>
-        <div v-if="group.address" class="group-info__item">
-          <div class="group-info__icon"><AddressIcon /></div>
-          <div class="group-info__value">
-            {{ group.address.address }}, {{ group.address.city.title }}
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <PostItem
-      v-for="post in posts" :key="post.id"
-      :post="post" />
-  </div>
+        <PostItem
+          v-for="post in posts" :key="post.id"
+          :post="post" />
+      </div>
+    </template>
+    <template v-slot:column-right>11</template>
+  </app-content>
 </template>
 
 <script>
@@ -41,6 +46,7 @@ import PostItem from '@/components/groups/posts/post.vue';
 import DescriptionIcon from '@/components/icons/description.vue';
 import WebsiteIcon from '@/components/icons/website.vue';
 import AddressIcon from '@/components/icons/address.vue';
+import AppContent from '@/components/common/layouts/content.vue';
 
 export default {
   components: {
@@ -48,6 +54,7 @@ export default {
     DescriptionIcon,
     WebsiteIcon,
     AddressIcon,
+    AppContent,
   },
 
   data() {
