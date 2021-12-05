@@ -23,7 +23,7 @@
             <div class="user-info__value">
               {{ relationShips }}
               <a href="">
-                {{ partner }}
+                {{ partnerName }}
               </a>
             </div>
           </div>
@@ -51,7 +51,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AppContent from '@/components/common/layouts/content.vue';
-import { birthdayVisibility, sexType } from '@/store';
+import { birthdayVisibilityType, sexType } from '@/store';
 
 export default {
   name: 'Home',
@@ -69,7 +69,7 @@ export default {
     ...mapGetters([
       'account',
       'userName',
-      'partner',
+      'partnerName',
     ]),
 
     universityName() {
@@ -89,10 +89,10 @@ export default {
       const monthCurrent = this.account.bdate.split('.')[1] - 1;
       const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
-      if (this.account.bdate_visibility === birthdayVisibility.FULL) {
+      if (this.account.bdate_visibility === birthdayVisibilityType.FULL) {
         return `${this.account.bdate.split('.')[0]} ${months[monthCurrent]}.${this.account.bdate.split('.')[1]} г.`;
       }
-      if (this.account.bdate_visibility === birthdayVisibility.PARTIAL) {
+      if (this.account.bdate_visibility === birthdayVisibilityType.PARTIAL) {
         return `${this.account.bdate.split('.')[0]} ${months[monthCurrent]}`;
       }
       return '';

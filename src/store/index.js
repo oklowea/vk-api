@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export const birthdayVisibility = {
+export const birthdayVisibilityType = {
   NONE: 0,
   FULL: 1,
   PARTIAL: 2,
@@ -39,12 +39,16 @@ export default new Vuex.Store({
     groups: (state) => state.groups,
     group: (state) => state.group,
     users: (state) => state.users,
-    partner: (state) => {
+    partnerName: (state) => {
       if (!state.account.relation_partner) {
         return null;
       }
 
       const partner = state.users.find((o) => o.id === state.account.relation_partner.id);
+      if (!partner) {
+        return null;
+      }
+
       return state.account.sex === sexType.MAN
         ? `${partner.first_name_abl} ${partner.last_name_abl}`
         : `${partner.first_name_ins} ${partner.last_name_ins}`;
