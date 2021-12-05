@@ -25,7 +25,7 @@ export default {
   props: {
     isSmall: {
       type: Boolean,
-      required: true,
+      default: false,
     },
 
     count: {

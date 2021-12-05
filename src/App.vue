@@ -1,12 +1,12 @@
 <template>
-  <div v-if="user">
+  <div v-if="account && account.user">
     <div class="header">
       <div class="header__bg">
         <div class="header__item">
           <LogoIcon />
         </div>
         <div class="header__item">
-          <img :src="user.photo_50" alt="" />
+          <img :src="account.user.photo_50" alt="" />
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@ export default {
 
   computed: {
     ...mapGetters([
-      'user',
+      'account',
     ]),
   },
 };
@@ -92,11 +92,11 @@ export default {
 
   .menu {
     width: 153px;
-    margin-right: 15px;
+    margin-right: 14px;
   }
 
   .content {
-    width: 552px;
+    width: 798px;
   }
 }
 
