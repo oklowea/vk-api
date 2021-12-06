@@ -4,6 +4,7 @@
       <div class="user-photo bg">
         <img :src="account.user.photo_200" alt="" />
       </div>
+      <GiftsWidget />
     </template>
     <template v-slot:column-right>
       <div class="user-info bg">
@@ -52,12 +53,14 @@
 import { mapGetters } from 'vuex';
 import AppContent from '@/components/common/layouts/content.vue';
 import { birthdayVisibilityType, sexType } from '@/store';
+import GiftsWidget from '@/components/widgets/gifts.vue';
 
 export default {
   name: 'Home',
 
   components: {
     AppContent,
+    GiftsWidget,
   },
 
   data() {
@@ -151,6 +154,7 @@ export default {
 <style lang="scss" scoped>
 .user-photo {
   padding: 15px 15px 6px 15px;
+  margin-bottom: 15px;
   border-radius: 5px;
 }
 
