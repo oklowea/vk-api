@@ -22,6 +22,8 @@ export default new Vuex.Store({
     groups: [],
     group: null,
     users: [],
+    giftsCount: 0,
+    gifts: [],
   },
 
   getters: {
@@ -53,6 +55,8 @@ export default new Vuex.Store({
         ? `${partner.first_name_abl} ${partner.last_name_abl}`
         : `${partner.first_name_ins} ${partner.last_name_ins}`;
     },
+    giftsCount: (state) => state.giftsCount,
+    gifts: (state) => state.gifts,
   },
 
   actions: {
@@ -68,7 +72,9 @@ export default new Vuex.Store({
       }
 
       if (account.relation_partner) {
-        const usersResponse = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${state.token}&user_ids=${account.relation_partner.id}&fields=first_name_ins,last_name_ins,first_name_abl,last_name_abl`);
+        const usersResponse = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${state.token}`
+        + `&user_ids=${account.relation_partner.id}`
+        + '&fields=first_name_ins,last_name_ins,first_name_abl,last_name_abl');
         const user = (await usersResponse.json()).response[0];
         commit('setUser', user);
       }
@@ -80,7 +86,9 @@ export default new Vuex.Store({
       const groups = (await groupsResponse.json()).response.items;
       const groupsId = groups.map((o) => o.id).join(',');
 
-      const groupsMembersResponse = await fetch(`https://api.vk.com/method/groups.getById?v=5.124&access_token=${state.token}&group_ids=${groupsId}&fields=members_count,activity,status`);
+      const groupsMembersResponse = await fetch(`https://api.vk.com/method/groups.getById?v=5.124&access_token=${state.token}`
+      + `&group_ids=${groupsId}`
+      + '&fields=members_count,activity,status');
       const groupsMembers = (await groupsMembersResponse.json()).response;
 
       commit('setGroups', groupsMembers);
@@ -112,12 +120,21 @@ export default new Vuex.Store({
     },
 
     async getComments({ state }, payload) {
-      const commentsPostResponse = await fetch(`https://api.vk.com/method/wall.getComments?v=5.124&access_token=${state.token}&owner_id=${payload.groupId}&post_id=${payload.postId}&extended=1&need_likes=1&offset=${payload.offset}`);
+      const commentsPostResponse = await fetch(`https://api.vk.com/method/wall.getComments?v=5.124&access_token=${state.token}`
+      + `&owner_id=${payload.groupId}`
+      + `&post_id=${payload.postId}`
+      + '&extended=1'
+      + '&need_likes=1'
+      + `&offset=${payload.offset}`);
       return (await commentsPostResponse.json()).response;
     },
 
     async getCommentsForThread({ state }, payload) {
-      const commentsPostResponse = await fetch(`https://api.vk.com/method/wall.getComments?v=5.124&access_token=${state.token}&owner_id=${payload.groupId}&comment_id=${payload.commentId}&post_id=${payload.postId}&extended=1&&need_likes=1`);
+      const commentsPostResponse = await fetch(`https://api.vk.com/method/wall.getComments?v=5.124&access_token=${state.token}`
+      + `&owner_id=${payload.groupId}`
+      + `&comment_id=${payload.commentId}`
+      + `&post_id=${payload.postId}`
+      + '&extended=1&&need_likes=1');
       return (await commentsPostResponse.json()).response;
     },
 
@@ -135,6 +152,15 @@ export default new Vuex.Store({
         + `&owner_id=${payload.ownerId}`
         + `&item_id=${payload.itemId}`);
       return (await response.json()).response;
+    },
+
+    async loadGifts({ state, commit }) {
+      if (state.giftsCount > 0) {
+        return;
+      }
+      const giftsResponse = await fetch(`https://api.vk.com/method/gifts.get?v=5.124&access_token=${state.token}`);
+      const gifts = (await giftsResponse.json()).response;
+      commit('setGifts', gifts);
     },
   },
 
@@ -163,6 +189,11 @@ export default new Vuex.Store({
 
     setGroup(state, payload) {
       state.group = payload;
+    },
+
+    setGifts(state, payload) {
+      state.gifts = payload.items;
+      state.giftsCount = payload.count;
     },
   },
 });
