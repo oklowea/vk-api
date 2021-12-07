@@ -1,22 +1,13 @@
 <template>
-  <div class="friends bg">
+  <div v-if="friendsCount" class="friends bg">
     <div class="friends__item">
       <div class="friends__header">
         <div class="friends-header__title">Друзья</div>
         <div class="friends-header__count">{{ friendsCount }}</div>
       </div>
       <div class="friends__list">
-        <div class="friends-list__item">
-          <div v-for="friend in someFriends[0]" :key="friend.id"
-               class="friends-list__person">
-            <div class="friends-list__person-photo">
-              <img :src="friend.photo_100" alt="" />
-            </div>
-            <div class="friends-list__person-name">{{ friend.first_name }}</div>
-          </div>
-        </div>
-        <div class="friends-list__item">
-          <div v-for="friend in someFriends[1]" :key="friend.id"
+        <div v-for="(friends, index) in someFriends" :key="index" class="friends-list__item">
+          <div v-for="friend in friends" :key="friend.id"
                class="friends-list__person">
             <div class="friends-list__person-photo">
               <img :src="friend.photo_100" alt="" />
@@ -30,20 +21,11 @@
     <div class="friends__item">
       <div class="friends__header">
         <div class="friends-header__title">Друзья онлайн</div>
-        <div class="friends-header__count">{{ onlineFriends[2] }}</div>
+        <div class="friends-header__count">{{ onlineFriends.length }}</div>
       </div>
       <div class="friends__list">
-        <div class="friends-list__item">
-          <div v-for="friend in onlineFriends[0]" :key="friend.id"
-               class="friends-list__person">
-            <div class="friends-list__person-photo">
-              <img :src="friend.photo_100" alt="" />
-            </div>
-            <div class="friends-list__person-name">{{ friend.first_name }}</div>
-          </div>
-        </div>
-        <div class="friends-list__item">
-          <div v-for="friend in onlineFriends[1]" :key="friend.id"
+        <div v-for="(friends, index) in someOnlineFriends" :key="index" class="friends-list__item">
+          <div v-for="friend in friends" :key="friend.id"
                class="friends-list__person">
             <div class="friends-list__person-photo">
               <img :src="friend.photo_100" alt="" />
@@ -67,18 +49,21 @@ export default {
     ]),
 
     onlineFriends() {
-      const onlineFriends = this.friends.filter((o) => o.online === 1);
-      const firstThree = onlineFriends.slice(0, 3);
-      const secondThree = onlineFriends.slice(3, 6);
+      return this.friends.filter((o) => o.online === 1);
+    },
 
-      return [firstThree, secondThree, onlineFriends.length];
+    someOnlineFriends() {
+      return [
+        this.onlineFriends.slice(0, 3),
+        this.onlineFriends.slice(3, 6),
+      ];
     },
 
     someFriends() {
-      const firstThree = this.friends.slice(0, 3);
-      const secondThree = this.friends.slice(3, 6);
-
-      return [firstThree, secondThree];
+      return [
+        this.friends.slice(0, 3),
+        this.friends.slice(3, 6),
+      ];
     },
   },
 
