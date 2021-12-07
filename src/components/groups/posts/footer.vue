@@ -98,9 +98,9 @@ export default {
       if (this.isLoaded) {
         return;
       }
-      const response = await this.$store.dispatch('getComments', {
+      const response = await this.$store.dispatch('groups/getComments', {
         postId: this.post.id,
-        groupId: this.post.owner_id,
+        ownerId: this.post.owner_id,
         offset: 0,
       });
       this.postComments = response.items;
@@ -112,9 +112,9 @@ export default {
     async getCommentsMore() {
       if (this.offset < this.currentLevelCount) {
         this.offset += 10;
-        const response = await this.$store.dispatch('getComments', {
+        const response = await this.$store.dispatch('groups/getComments', {
           postId: this.post.id,
-          groupId: this.post.owner_id,
+          ownerId: this.post.owner_id,
           offset: this.offset,
         });
 

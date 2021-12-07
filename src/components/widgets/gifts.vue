@@ -1,5 +1,5 @@
 <template>
-  <div class="user-gifts bg">
+  <div v-if="giftsCount" class="user-gifts bg">
     <div class="user-gifts__header">
       <div class="user-gifts__title">Подарки</div>
       <div class="user-gifts__count">{{ giftsCount }}</div>
@@ -19,7 +19,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters([
+    ...mapGetters('gifts', [
       'giftsCount',
       'gifts',
     ]),
@@ -30,7 +30,7 @@ export default {
   },
 
   async created() {
-    await this.$store.dispatch('loadGifts');
+    await this.$store.dispatch('gifts/loadGifts');
   },
 };
 </script>

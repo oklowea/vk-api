@@ -52,7 +52,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AppContent from '@/components/common/layouts/content.vue';
-import { birthdayVisibilityType, sexType } from '@/store';
+import { birthdayVisibilityType, sexType } from '@/store/account';
 import GiftsWidget from '@/components/widgets/gifts.vue';
 
 export default {
@@ -69,7 +69,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters('account', [
       'account',
       'userName',
       'partnerName',

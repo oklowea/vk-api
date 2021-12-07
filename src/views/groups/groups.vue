@@ -23,13 +23,13 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters('groups', [
       'groups',
     ]),
   },
 
   created() {
-    this.$store.dispatch('getGroups');
+    this.$store.dispatch('groups/getGroups');
   },
 };
 </script>
