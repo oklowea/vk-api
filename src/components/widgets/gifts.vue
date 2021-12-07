@@ -1,13 +1,13 @@
 <template>
-  <div v-if="giftsCount" class="user-gifts bg">
-    <div class="user-gifts__header">
-      <div class="user-gifts__title">Подарки</div>
-      <div class="user-gifts__count">{{ giftsCount }}</div>
+  <div v-if="giftsCount" class="gifts bg">
+    <div class="gifts__header">
+      <div class="gifts__title">Подарки</div>
+      <div class="gifts__count">{{ giftsCount }}</div>
     </div>
-    <div class="user-gifts__lists">
+    <div class="gifts__list">
       <div
         v-for="lastGift in lastGifts"
-        :key="lastGift.id" class="user-gifts-list__item">
+        :key="lastGift.id" class="gift-list__item">
         <img :src="lastGift.gift.thumb_96" alt="" />
       </div>
     </div>
@@ -36,8 +36,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-gifts {
+.gifts {
   border-radius: 5px;
+  margin-bottom: 15px;
 
   &__header {
     display: flex;
@@ -50,14 +51,14 @@ export default {
     color: var(--gray-400);
   }
 
-  &__lists {
+  &__list {
     display: flex;
     justify-content: space-between;
     padding: 0 15px 15px 15px;
   }
 }
 
-.user-gifts-list {
+.gift-list {
   &__item {
     img {
       width: 64px;
