@@ -5,6 +5,7 @@
         <img :src="account.user.photo_200" alt="" />
       </div>
       <GiftsWidget />
+      <FriendsWidget />
     </template>
     <template v-slot:column-right>
       <div class="user-info bg">
@@ -54,6 +55,7 @@ import { mapGetters } from 'vuex';
 import AppContent from '@/components/common/layouts/content.vue';
 import { birthdayVisibilityType, sexType } from '@/store/account';
 import GiftsWidget from '@/components/widgets/gifts.vue';
+import FriendsWidget from '@/components/widgets/friends.vue';
 
 export default {
   name: 'Home',
@@ -61,6 +63,7 @@ export default {
   components: {
     AppContent,
     GiftsWidget,
+    FriendsWidget,
   },
 
   data() {
