@@ -43,7 +43,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters('groups', [
       'group',
     ]),
 

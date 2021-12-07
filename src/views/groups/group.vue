@@ -64,8 +64,8 @@ export default {
   },
 
   async created() {
-    await this.$store.dispatch('getGroup', this.id);
-    this.posts = await this.$store.dispatch('getPosts', this.id);
+    await this.$store.dispatch('groups/getGroup', this.id);
+    this.posts = await this.$store.dispatch('groups/getPosts', this.id);
   },
 
   computed: {
@@ -73,7 +73,7 @@ export default {
       return Number(this.$route.params.id);
     },
 
-    ...mapGetters([
+    ...mapGetters('groups', [
       'group',
     ]),
 

@@ -83,7 +83,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters('groups', [
       'group',
     ]),
 
@@ -132,10 +132,11 @@ export default {
 
   methods: {
     async openComments() {
-      const response = await this.$store.dispatch('getCommentsForThread', {
+      const response = await this.$store.dispatch('groups/getCommentsForThread', {
         postId: this.post.id,
-        groupId: this.post.owner_id,
+        ownerId: this.post.owner_id,
         commentId: this.postComment.id,
+        offset: 0,
       });
       this.postCommentsThread = response.items;
       this.postProfilesThread = response.profiles;

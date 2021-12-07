@@ -8,7 +8,7 @@ require('@/assets/styles.scss');
 (async () => {
   Vue.config.productionTip = false;
 
-  await store.dispatch('init');
+  await store.dispatch('account/init');
 
   new Vue({
     router,

@@ -58,13 +58,13 @@ export default {
     async toggleLike() {
       let response;
       if (this.hasLike) {
-        response = await this.$store.dispatch('dislike', {
+        response = await this.$store.dispatch('likes/dislike', {
           type: this.type,
           ownerId: this.ownerId,
           itemId: this.itemId,
         });
       } else {
-        response = await this.$store.dispatch('like', {
+        response = await this.$store.dispatch('likes/like', {
           type: this.type,
           ownerId: this.ownerId,
           itemId: this.itemId,
