@@ -16,14 +16,15 @@ export default {
   },
 
   actions: {
-    async getGroups({ commit }) {
+    async getGroups({ state, commit }) {
       const groups = await groupsService.getGroups();
       const groupIds = groups.items.map((o) => o.id).join(',');
-      commit('setCount', groups);
 
-      // if (state.groupsCount > 0) {
-      //   return;
-      // }
+      if (state.groupsCount > 0) {
+        return;
+      }
+
+      commit('setCount', groups);
 
       const groupsExtended = await groupsService.getByIds(groupIds);
       commit('setGroups', groupsExtended);
