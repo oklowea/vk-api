@@ -1,8 +1,8 @@
 <template>
-  <div class="groups bg">
+  <div v-if="groupsCount" class="groups bg">
     <div class="groups__header">
       <div class="groups-header__title">Подписки</div>
-      <div class="groups-header__count">10</div>
+      <div class="groups-header__count">{{ groupsCount }}</div>
     </div>
     <div class="groups__list">
       <div v-for="group in someGroups" :key="group.id" class="groups-list__item">
@@ -25,6 +25,7 @@ export default {
   computed: {
     ...mapGetters('groups', [
       'groups',
+      'groupsCount',
     ]),
 
     someGroups() {

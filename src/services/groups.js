@@ -1,7 +1,7 @@
 const groupsService = {
   async getGroups() {
     const response = await fetch(`https://api.vk.com/method/groups.get?v=5.124&access_token=${process.env.VUE_APP_VK_TOKEN}&extended=1`);
-    return (await response.json()).response.items;
+    return (await response.json()).response;
   },
 
   async getByIds(ids) {
