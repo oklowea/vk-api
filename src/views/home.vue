@@ -6,6 +6,7 @@
       </div>
       <GiftsWidget />
       <FriendsWidget />
+      <groupsWidget />
     </template>
     <template v-slot:column-right>
       <div class="user-info bg">
@@ -56,6 +57,7 @@ import AppContent from '@/components/common/layouts/content.vue';
 import { birthdayVisibilityType, sexType } from '@/store/account';
 import GiftsWidget from '@/components/widgets/gifts.vue';
 import FriendsWidget from '@/components/widgets/friends.vue';
+import groupsWidget from '@/components/widgets/gpoups.vue';
 
 export default {
   name: 'Home',
@@ -64,6 +66,7 @@ export default {
     AppContent,
     GiftsWidget,
     FriendsWidget,
+    groupsWidget,
   },
 
   data() {
