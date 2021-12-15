@@ -5,18 +5,26 @@ export default {
 
   state: {
     groups: [],
+    groupsCount: 0,
     group: null,
   },
 
   getters: {
     groups: (state) => state.groups,
+    groupsCount: (state) => state.groupsCount,
     group: (state) => state.group,
   },
 
   actions: {
-    async getGroups({ commit }) {
+    async getGroups({ state, commit }) {
       const groups = await groupsService.getGroups();
-      const groupIds = groups.map((o) => o.id).join(',');
+      const groupIds = groups.items.map((o) => o.id).join(',');
+
+      if (state.groupsCount > 0) {
+        return;
+      }
+
+      commit('setCount', groups);
 
       const groupsExtended = await groupsService.getByIds(groupIds);
       commit('setGroups', groupsExtended);
@@ -52,6 +60,10 @@ export default {
   mutations: {
     setGroups(state, payload) {
       state.groups = payload;
+    },
+
+    setCount(state, payload) {
+      state.groupsCount = payload.count;
     },
 
     setGroup(state, payload) {
