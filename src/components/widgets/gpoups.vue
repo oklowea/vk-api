@@ -95,7 +95,7 @@ export default {
 
   &__title {
     font-size: 12.5px;
-    color: var(--blue-1000);
+    color: var(--link);
     padding: 4px 0 2px 0;
   }
 

@@ -39,14 +39,8 @@
             </div>
           </div>
         </div>
-        <div class="user-info__counters">
-          <div></div>
-        </div>
       </div>
-<!--      {{ account.user.counters.friends}}-->
-<!--      {{ account.user.counters.photos}}-->
-<!--      {{ account.user.counters.user_photos}}-->
-<!--      {{ account.user.counters.audios}}-->
+      <CounterWidget />
     </template>
   </app-content>
 </template>
@@ -58,6 +52,7 @@ import { birthdayVisibilityType, sexType } from '@/store/account';
 import GiftsWidget from '@/components/widgets/gifts.vue';
 import FriendsWidget from '@/components/widgets/friends.vue';
 import GroupsWidget from '@/components/widgets/gpoups.vue';
+import CounterWidget from '@/components/widgets/counter.vue';
 
 export default {
   name: 'Home',
@@ -67,6 +62,7 @@ export default {
     GiftsWidget,
     FriendsWidget,
     GroupsWidget,
+    CounterWidget,
   },
 
   data() {
@@ -166,7 +162,7 @@ export default {
 
 .user-info {
   padding: 15px 20px;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0 ;
   font-size: 13px;
 
   &__main-data {
