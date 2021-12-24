@@ -122,14 +122,14 @@ export default {
       opacity: 0.45;
 
       path {
-        fill: var(--blue-600);
+        fill: var(--link);
       }
     }
   }
 
   &__title {
     font-size: 12.5px;
-    color: var(--blue-1000);
+    color: var(--link);
     text-decoration: none;
 
     &:after {
@@ -149,7 +149,7 @@ export default {
     top: 0;
     right: 0;
     font-size: 12.5px;
-    color: var(--blue-1000);
+    color: var(--link);
     background: var(--gray-120);
     line-height: 27px;
     padding: 0 5px;

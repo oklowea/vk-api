@@ -126,7 +126,7 @@ export default {
 
   &__person-name {
     font-size: 12px;
-    color: var(--blue-1000);
+    color: var(--link);
     text-align: center;
   }
 }
