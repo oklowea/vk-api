@@ -1,7 +1,7 @@
 export default function dateConversion(dateInMs) {
   const date = new Date(dateInMs * 1000);
   let day = date.getDate();
-  let month = date.getMonth();
+  let month = date.getMonth() + 1;
   let seconds = date.getSeconds();
   let minutes = date.getMinutes();
   let hours = date.getHours();
@@ -10,6 +10,7 @@ export default function dateConversion(dateInMs) {
     day = `0${day}`;
   }
 
+  // c 0-январь до 9-октябрь
   if (month < 10) {
     month = `0${month}`;
   }

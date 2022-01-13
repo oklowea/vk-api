@@ -8,7 +8,7 @@ const accountService = {
     const userId = id ? `&user_ids=${id}` : '';
     const response = await fetch(`https://api.vk.com/method/users.get?v=5.81&access_token=${process.env.VUE_APP_VK_TOKEN}`
     + `${userId}`
-    + '&fields=photo_200,photo_50,education,counters,first_name_ins,last_name_ins,first_name_abl,last_name_abl');
+    + '&fields=photo_50,photo_max_orig,education,counters,first_name_ins,last_name_ins,first_name_abl,last_name_abl');
     return (await response.json()).response[0];
   },
 };
