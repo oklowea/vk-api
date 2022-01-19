@@ -4,6 +4,12 @@
     <div class="modal-content">
       <div class="modal-content__left" :class="classObj">
         <img class="size-img" :src="biggestSizePhoto.url" alt="" />
+        <div @click="previousPhoto" class="arrow arrow__left">
+          <ArrowLeft />
+        </div>
+        <div @click="nextPhoto" class="arrow arrow__right">
+          <ArrowRight />
+        </div>
       </div>
       <div class="modal-content__right bg">
         <div class="info">
@@ -27,15 +33,20 @@
 import { mapGetters } from 'vuex';
 import CloseIcon from '../icons/close.vue';
 import dateConversion from '@/helpers/date-conversion';
+import ArrowRight from '../icons/arrow-right.vue';
+import ArrowLeft from '../icons/arrow-left.vue';
 
 export default {
   components: {
     CloseIcon,
+    ArrowRight,
+    ArrowLeft,
   },
 
   data() {
     return {
       isLoaded: false,
+      currentPhotoIndex: 0,
     };
   },
 
@@ -50,7 +61,7 @@ export default {
     ]),
 
     biggestSizePhoto() {
-      return this.photos[this.photos.length - 1].sizes.find((o) => o.type === 'z');
+      return this.photos[this.currentPhotoIndex].sizes.find((o) => o.type === 'z');
     },
 
     isHorizontalPhoto() {
@@ -71,12 +82,29 @@ export default {
 
   async created() {
     await this.$store.dispatch('photos/loadPhotos');
+    this.currentPhotoIndex = this.photos.length - 1;
     this.isLoaded = true;
   },
 
   methods: {
     closeModalWindow() {
       this.$emit('close-modal-window');
+    },
+
+    nextPhoto() {
+      this.currentPhotoIndex -= 1;
+
+      if (this.currentPhotoIndex < 0) {
+        this.currentPhotoIndex = this.photos.length - 1;
+      }
+    },
+
+    previousPhoto() {
+      this.currentPhotoIndex += 1;
+
+      if (this.currentPhotoIndex === this.photos.length) {
+        this.currentPhotoIndex = 0;
+      }
     },
   },
 };
@@ -110,6 +138,7 @@ export default {
   z-index: 9999;
 
   &__left {
+    position: relative;
     width: 75%;
     background: var(--black-for-photo);
     border-radius: 5px 0 0 5px;
@@ -121,6 +150,46 @@ export default {
     &--horizontal {
       display: flex;
       align-items: center;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      margin-top: -24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      background-color: var(--background-for-icons);
+
+      &:hover {
+        cursor: pointer;
+
+        ::v-deep path {
+          fill: var(--white);
+        }
+      }
+
+      svg {
+        width: 32px;
+        height: 32px;
+        position: relative;
+        left: -2px;
+
+        ::v-deep path {
+          fill: #c2c4c7;
+        }
+      }
+
+      &__left {
+        left: 12px;
+      }
+
+      &__right {
+        right: 12px;
+      }
     }
   }
 
@@ -175,8 +244,16 @@ export default {
     width: 20px;
     height: 20px;
 
+    ::v-deep path {
+      fill: #c2c4c7;
+    }
+
     &:hover {
       cursor: pointer;
+
+      ::v-deep path {
+        fill: var(--white);
+      }
     }
   }
 }
