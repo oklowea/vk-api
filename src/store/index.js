@@ -5,6 +5,7 @@ import gifts from './gifts';
 import groups from './groups';
 import likes from './likes';
 import friends from './friends';
+import photos from './photos';
 
 Vue.use(Vuex);
 
@@ -15,5 +16,6 @@ export default new Vuex.Store({
     groups,
     likes,
     friends,
+    photos,
   },
 });

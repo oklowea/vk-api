@@ -1,9 +1,14 @@
 <template>
   <app-content :is-right-wide="true">
     <template v-slot:column-left>
-      <div class="user-photo bg">
-        <img :src="account.user.photo_200" alt="" />
+      <div
+        @click="openModalWindow"
+        class="user-photo bg">
+        <img :src="account.user.photo_max_orig" alt="" />
       </div>
+      <ModalWindow
+        v-if="isBigPhoto"
+        @close-modal-window="closeModalWindow" />
       <GiftsWidget />
       <FriendsWidget />
       <GroupsWidget />
@@ -53,6 +58,7 @@ import GiftsWidget from '@/components/widgets/gifts.vue';
 import FriendsWidget from '@/components/widgets/friends.vue';
 import GroupsWidget from '@/components/widgets/gpoups.vue';
 import CounterWidget from '@/components/widgets/counter.vue';
+import ModalWindow from '@/components/common/modal-window-photo.vue';
 
 export default {
   name: 'Home',
@@ -63,10 +69,12 @@ export default {
     FriendsWidget,
     GroupsWidget,
     CounterWidget,
+    ModalWindow,
   },
 
   data() {
     return {
+      isBigPhoto: false,
     };
   },
 
@@ -150,6 +158,18 @@ export default {
       return '';
     },
   },
+
+  methods: {
+    openModalWindow() {
+      this.isBigPhoto = true;
+      document.querySelector('body').style.overflow = 'hidden';
+    },
+
+    closeModalWindow() {
+      this.isBigPhoto = false;
+      document.querySelector('body').style.overflow = 'visible';
+    },
+  },
 };
 </script>
 
@@ -158,6 +178,15 @@ export default {
   padding: 15px 15px 6px 15px;
   margin-bottom: 15px;
   border-radius: 5px;
+
+  img {
+    width: 200px;
+    height: 200px;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .user-info {
