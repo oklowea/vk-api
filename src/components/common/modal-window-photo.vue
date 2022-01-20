@@ -21,6 +21,25 @@
             <div class="info__loading"> {{ date }} </div>
           </div>
         </div>
+
+        <div class="reactions">
+          <div class="reaction">
+            <div class="reaction__item">
+              <AppLike
+                @toggle-like="toggleLike"
+                :has-like="hasLike"
+                :count="this.photos[this.currentPhotoIndex].likes.count"
+                type="photo"
+                :owner-id="this.account.user.id"
+                :item-id="this.photos[this.currentPhotoIndex].id"
+              />
+            </div>
+            <div class="reaction__item">
+              <SharedIcon />
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <div class="modal-close" @click="closeModalWindow">
@@ -35,12 +54,16 @@ import CloseIcon from '../icons/close.vue';
 import dateConversion from '@/helpers/date-conversion';
 import ArrowRight from '../icons/arrow-right.vue';
 import ArrowLeft from '../icons/arrow-left.vue';
+import AppLike from '@/components/common/like.vue';
+import SharedIcon from '@/components/icons/shared.vue';
 
 export default {
   components: {
     CloseIcon,
     ArrowRight,
     ArrowLeft,
+    AppLike,
+    SharedIcon,
   },
 
   data() {
@@ -78,15 +101,33 @@ export default {
     date() {
       return dateConversion(this.photos[this.photos.length - 1].date);
     },
+
+    hasLike() {
+      return Boolean(this.photos[this.currentPhotoIndex].likes.user_likes);
+    },
   },
 
   async created() {
     await this.$store.dispatch('photos/loadPhotos');
     this.currentPhotoIndex = this.photos.length - 1;
     this.isLoaded = true;
+    window.addEventListener('keydown', this.onKeyPress);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.onKeyPress);
   },
 
   methods: {
+    onKeyPress(e) {
+      switch (e.key) {
+        case 'ArrowRight': this.nextPhoto(); break;
+        case 'ArrowLeft': this.previousPhoto(); break;
+        case 'Escape': this.closeModalWindow(); break;
+        default:
+      }
+    },
+
     closeModalWindow() {
       this.$emit('close-modal-window');
     },
@@ -105,6 +146,11 @@ export default {
       if (this.currentPhotoIndex === this.photos.length) {
         this.currentPhotoIndex = 0;
       }
+    },
+
+    toggleLike(payload) {
+      this.photos[this.currentPhotoIndex].likes.count = payload.count;
+      this.photos[this.currentPhotoIndex].likes.user_likes = payload.hasLike;
     },
   },
 };
@@ -226,6 +272,23 @@ export default {
 
   &__loading {
     color: var(--steel-gray-400);
+  }
+}
+
+.reactions {
+  padding: 17px 15px;
+  border-bottom: 1px solid var(--gray-80);
+}
+
+.reaction {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  &__item {
+    &:first-child {
+      margin-right: 20px;
+    }
   }
 }
 
