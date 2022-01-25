@@ -1,50 +1,56 @@
 <template>
-  <div class="footer-comment">
-    <div class="footer-comment__profile-photo">
-      <img :src="profilePhoto" alt="" />
-    </div>
-    <div class="footer-comment__description">
-      <div class="footer-comment__profile-name">
-        {{ profileName }}
+    <div class="footer-comment">
+      <div class="footer-comment__profile-photo">
+        <img :src="profilePhoto" alt="" />
       </div>
-      <div class="footer-comment__text">{{ postComment.text }}</div>
+      <div class="footer-comment__description">
+        <div class="footer-comment__profile-name">
+          {{ profileName }}
+        </div>
+        <div class="footer-comment__text">{{ postComment.text }}</div>
 
-      <div class="footer-comment__bottom">
-        <div class="footer-comment__item">
-          <div class="footer-comment__date">{{ date }}</div>
-          <div class="footer-comment__respond">
-            <a href="">Oтветить</a>
+        <div class="footer-comment__bottom">
+          <div class="footer-comment__item">
+            <div class="footer-comment__date">{{ date }}</div>
+            <div class="footer-comment__respond">
+              <a href="">Oтветить</a>
+            </div>
+          </div>
+          <div class="footer-comment__item">
+            <AppLike
+              @toggle-like="toggleLike"
+              :has-like="hasLike"
+              :is-small="true"
+              :count="postComment.likes.count"
+              type="comment"
+              :owner-id="postComment.owner_id"
+              :item-id="postComment.id"
+            />
           </div>
         </div>
-        <div class="footer-comment__item">
-          <AppLike
-            @toggle-like="toggleLike"
-            :has-like="hasLike"
-            :is-small="true"
-            :count="postComment.likes.count"
-            type="comment"
-            :owner-id="postComment.owner_id"
-            :item-id="postComment.id"
-          />
+
+        <div v-if="hasLoadMore" class="footer-comment__count">
+          <a @click.prevent="openComments" href="">
+            {{ postComment.thread.count }} {{ answersLabel }}
+          </a>
         </div>
-      </div>
 
-      <div v-if="hasLoadMore" class="footer-comment__count">
-        <a @click.prevent="openComments" href="">
-          {{ postComment.thread.count }} {{ answersLabel }}
-        </a>
+        <template v-if="postCommentsThread.length">
+          <CommentItem
+            v-for="postCommentThread in postCommentsThread" :key="postCommentThread.id"
+            :post="post"
+            :post-profiles="postProfilesThread"
+            :post-comment="postCommentThread"
+          />
+          <div
+            @click.prevent="getCommentsMore"
+            v-if="postComment.thread.count > 10 && offset < currentLevelCount - 10"
+            class="footer-comment__show-more">
+            <a href="">Показать следующие комментарии</a>
+          </div>
+        </template>
       </div>
-
-      <template v-if="postCommentsThread.length">
-        <CommentItem
-          v-for="postCommentThread in postCommentsThread" :key="postCommentThread.id"
-          :post="post"
-          :post-profiles="postProfilesThread"
-          :post-comment="postCommentThread"
-        />
-      </template>
     </div>
-  </div>
 </template>
 
 <script>
@@ -79,6 +85,8 @@ export default {
     return {
       postCommentsThread: [],
       postProfilesThread: [],
+      offset: 0,
+      currentLevelCount: 0,
     };
   },
 
@@ -140,6 +148,22 @@ export default {
       });
       this.postCommentsThread = response.items;
       this.postProfilesThread = response.profiles;
+      this.currentLevelCount = response.current_level_count;
+    },
+
+    async getCommentsMore() {
+      if (this.offset < this.currentLevelCount) {
+        this.offset += 10;
+        const response = await this.$store.dispatch('groups/getCommentsForThread', {
+          postId: this.post.id,
+          ownerId: this.post.owner_id,
+          commentId: this.postComment.id,
+          offset: this.offset,
+        });
+
+        this.postCommentsThread = this.postCommentsThread.concat(response.items);
+        this.postProfilesThread = this.postProfilesThread.concat(response.profiles);
+      }
     },
 
     toggleLike(payload) {
@@ -217,6 +241,15 @@ export default {
        color: var(--link);
      }
   }
-}
 
+  &__show-more {
+    margin: 0 0 12px 50px;
+
+     a {
+       text-decoration: none;
+       color: var(--link);
+       font-weight: bold;
+     }
+  }
+}
 </style>
