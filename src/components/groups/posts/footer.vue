@@ -21,7 +21,7 @@
           <div class="footer-count__value">{{ (post.reposts.count).toLocaleString() }}</div>
         </div>
       </div>
-      <div class="footer-count__right">
+      <div v-if="views" class="footer-count__right">
         <div class="footer-count__item">
           <div class="footer-count__icon"><ViewsIcon /></div>
           <div class="footer-count__value footer-count__value--other">{{ views }}</div>
@@ -84,7 +84,10 @@ export default {
 
   computed: {
     views() {
-      return numberRounding(this.post.views.count);
+      if (this.post.views) {
+        return numberRounding(this.post.views.count);
+      }
+      return 0;
     },
 
     hasLike() {

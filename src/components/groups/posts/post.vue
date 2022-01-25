@@ -2,11 +2,11 @@
   <div class="post bg">
     <div class="post-group">
       <div class="post-group__photo">
-        <img :src="group.info.photo_50" alt="" />
+        <img :src="profilePhoto" alt="" />
       </div>
       <div class="post-group__data">
         <div class="post-group__title">
-          <a href="">{{ group.info.name }}</a>
+          <a href="">{{ profileName }}</a>
         </div>
         <div class="post-group__time">{{ date }}</div>
       </div>
@@ -40,6 +40,11 @@ export default {
       type: Object,
       required: true,
     },
+
+    profiles: {
+      type: Array,
+      required: true,
+    },
   },
 
   computed: {
@@ -49,6 +54,24 @@ export default {
 
     date() {
       return dateConversion(this.post.date);
+    },
+
+    ownerPost() {
+      return this.profiles.find((o) => o.id === this.post.from_id);
+    },
+
+    profilePhoto() {
+      if (this.post.from_id === -this.group.info.id) {
+        return this.group.info.photo_50;
+      }
+      return this.ownerPost.photo_50;
+    },
+
+    profileName() {
+      if (this.post.from_id === -this.group.info.id) {
+        return this.group.info.name;
+      }
+      return `${this.ownerPost.first_name} ${this.ownerPost.last_name}`;
     },
   },
 };

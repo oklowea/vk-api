@@ -29,8 +29,12 @@ const groupsService = {
   },
 
   async getWall(id) {
-    const response = await fetch(`https://api.vk.com/method/wall.get?v=5.157&access_token=${process.env.VUE_APP_VK_TOKEN}&owner_id=-${id}&count=10`);
-    return (await response.json()).response.items;
+    const response = await fetch(`https://api.vk.com/method/wall.get?v=5.157&access_token=${process.env.VUE_APP_VK_TOKEN}`
+    + `&owner_id=-${id}`
+    + '&extended=1'
+    + '&fields=first_name,last_name,photo_50'
+    + '&count=10');
+    return (await response.json()).response;
   },
 
   async getCommentsWall(payload) {
