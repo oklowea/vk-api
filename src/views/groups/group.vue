@@ -32,7 +32,9 @@
 
         <PostItem
           v-for="post in posts" :key="post.id"
-          :post="post" />
+          :post="post"
+          :profiles="profiles"
+        />
       </div>
     </template>
     <template v-slot:column-right>11</template>
@@ -60,12 +62,15 @@ export default {
   data() {
     return {
       posts: [],
+      profiles: [],
     };
   },
 
   async created() {
     await this.$store.dispatch('groups/getGroup', this.id);
-    this.posts = await this.$store.dispatch('groups/getPosts', this.id);
+    const response = await this.$store.dispatch('groups/getPosts', this.id);
+    this.posts = response.items;
+    this.profiles = response.profiles;
   },
 
   computed: {
