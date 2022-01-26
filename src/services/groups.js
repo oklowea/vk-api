@@ -28,9 +28,10 @@ const groupsService = {
     return (await response.json()).response[0];
   },
 
-  async getWall(id) {
+  async getWall(payload) {
     const response = await fetch(`https://api.vk.com/method/wall.get?v=5.157&access_token=${process.env.VUE_APP_VK_TOKEN}`
-    + `&owner_id=-${id}`
+    + `&owner_id=-${payload.ownerId}`
+    + `&offset=${payload.offset}`
     + '&extended=1'
     + '&fields=first_name,last_name,photo_50'
     + '&count=10');

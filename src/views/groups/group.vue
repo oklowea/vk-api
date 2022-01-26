@@ -35,6 +35,13 @@
           :post="post"
           :profiles="profiles"
         />
+
+        <div
+          v-if="offset < totalPosts - 10"
+          @click.prevent="getPostsMore"
+          class="group-show-more">
+          <a href="">Загрузить еще</a>
+        </div>
       </div>
     </template>
     <template v-slot:column-right>11</template>
@@ -63,14 +70,20 @@ export default {
     return {
       posts: [],
       profiles: [],
+      offset: 0,
+      totalPosts: 0,
     };
   },
 
   async created() {
     await this.$store.dispatch('groups/getGroup', this.id);
-    const response = await this.$store.dispatch('groups/getPosts', this.id);
+    const response = await this.$store.dispatch('groups/getPosts', {
+      ownerId: this.id,
+      offset: 0,
+    });
     this.posts = response.items;
     this.profiles = response.profiles;
+    this.totalPosts = response.count;
   },
 
   computed: {
@@ -89,6 +102,19 @@ export default {
 
     description() {
       return this.group.info.description.replace(/\n/gm, '<br />');
+    },
+  },
+
+  methods: {
+    async getPostsMore() {
+      this.offset += 10;
+      const response = await this.$store.dispatch('groups/getPosts', {
+        ownerId: this.id,
+        offset: this.offset,
+      });
+
+      this.posts = this.posts.concat(response.items);
+      this.profiles = this.postProfiles.concat(response.profiles);
     },
   },
 };
@@ -127,6 +153,14 @@ export default {
     margin-right: 8px;
     position: relative;
     top: -4px;
+  }
+}
+
+.group-show-more {
+  a {
+    text-decoration: none;
+    color: var(--link);
+    font-weight: bold;
   }
 }
 </style>
