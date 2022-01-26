@@ -44,8 +44,8 @@ export default {
       });
     },
 
-    async getPosts(o, id) {
-      return groupsService.getWall(id);
+    async getPosts(o, payload) {
+      return groupsService.getWall(payload);
     },
 
     async getComments(o, payload) {
